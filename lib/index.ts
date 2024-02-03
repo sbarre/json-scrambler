@@ -1,4 +1,3 @@
-
 import randomstring from 'randomstring';
 
 type JSONValue =
@@ -8,7 +7,7 @@ type JSONValue =
     | { [x: string]: JSONValue }
     | Array<JSONValue>;
 
-type MutatorOptions = {
+type ScramblerOptions = {
   chaos?: number;
   canBeNull?: boolean;
   nullOdds?: number;
@@ -17,7 +16,7 @@ type MutatorOptions = {
   wildKeys?: boolean;
 }
 
-export class Mutator {
+class Scrambler {
 
   heat: number = 10;
   startingOdds: number = 100;
@@ -67,7 +66,7 @@ export class Mutator {
   preservedKeys: any[];
   preserveAllKeys: boolean;
 
-  constructor(json: any, options: MutatorOptions = {}) {
+  constructor(json: any, options: ScramblerOptions = {}) {
 
     this.nullOdds = options.nullOdds || 5;
     this.odds = this.startingOdds;
@@ -84,7 +83,7 @@ export class Mutator {
 
   }
 
-  mutate() {
+  scramble() {
 
     let parsed: any = JSON.parse(JSON.stringify(this.parsed));
 
@@ -282,6 +281,6 @@ export class Mutator {
 
 }
 
-export default function mutate(json: string | Object, options: MutatorOptions): string | Object {
-  return (new Mutator(json, options)).mutate();
+export default function mutate(json: string | Object, options: ScramblerOptions): string | Object {
+  return (new Scrambler(json, options)).scramble();
 }
