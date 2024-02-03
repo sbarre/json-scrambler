@@ -10,7 +10,13 @@ JSON Scrambler will take any arbitrary valid JSON and use predefined modifiers t
 
 You can control how subtle, or not subtle, the changes are. From simple modifications like adding extra keys or values, shuffling array positions, or replacing values with nulls, all the way up to returning a completely unrecognizable document from the input.
 
+## Why would I use this?
+
 JSON Scrambler can be used for testing the robustness of any program that accepts JSON input (such as an API or microservice) by providing infinite variations on existing JSON documents in ways that are unpredictable and random.
+
+Make sure your application doesn't assume that _valid_ JSON is _correct_ JSON!
+
+### Credit where it's due
 
 This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the randomized data needs to remain valid JSON.
 
@@ -22,8 +28,7 @@ To install json-scrambler, use npm:
 $ npm install json-scrambler
 ```
 
-> [!NOTE]
-> **NPM doesn't work yet.**
+> [!NOTE] > **NPM doesn't work yet.**
 > If you want to use this today, clone the repo, run `npm install` and then `npm run build` and look in the `dist` folder.
 
 ## Usage
