@@ -18,7 +18,7 @@ Make sure your application doesn't assume that _valid_ JSON is _correct_ JSON!
 
 ### Credit where it's due
 
-This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the randomized data needs to remain valid JSON.
+This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON.
 
 ## Installation
 
@@ -28,8 +28,7 @@ To install json-scrambler, use npm:
 $ npm install json-scrambler
 ```
 
-> [!NOTE]
-> **NPM doesn't work yet.**
+> [!NOTE] > **NPM doesn't work yet.**
 > If you want to use this today, clone the repo, run `npm install` and then `npm run build` and look in the `dist` folder.
 
 ## Usage
@@ -92,27 +91,32 @@ It could also look like this:
 }
 ```
 
-The scrambling can randomize strings, numbers and object keys, add, remove or shuffle elements in an array, and insert new keys.
+The scrambling can randomize strings, numbers and object keys. It can also add, remove or shuffle elements in an array, and insert or remove keys from objects.
 
 ## API
 
-The `scramble` command accepts two parameters, the JSON to be scrambled and an optional `options` object:
+The `scramble(json[, options])` command accepts two parameters, the JSON to be scrambled and an optional `options` object.
+
+The `json` property can be passed as a `string` or as a Javascript `object` and will be returned in the same format it was received.
 
 Every property of `options` is optional and has a default value.
 
-- `options`
-  - `chaos` - The amount of scrambling to do. Valid values between `0` and `100` (default: **10**)
-  - `canBeNull` - A boolean value that indicates if values can be made null during scrambling (default: **true**)
-  - `nullOdds` - Percentage chance between `0` and `100` that a value will be scrambled to `null`. Keep this low unless you want a lot of empty objects (default: **5**)
-  - `preservedKeys` - An array of keys (as strings) that should not be scrambled (default: **[]**)
-  - `preserveAllKeys` - A boolean value to indicate if all object keys should be preserved (default: **false**)
-  - `scrambleStructureOnly` - A boolean value to indicate if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays (default: **false**)
-  - `wildKeys` - A boolean value to control how readable scrambled object keys should be (default: **false**)
-  - `startingPoint` - A [JSONPath]() expression to tell the scrambler where to start scrambling in the document. Useful if you only care about a certain portion of a large document. Still returns the full document (default: **none**)
+- `options: ScramblerOptions = {}`
+  - `chaos: number` - The amount of scrambling to do. Valid values between `0` and `100` (default: **10**)
+  - `canBeNull: boolean` - Indicates if values can be made null during scrambling (default: **true**)
+  - `nullOdds: number` - Percentage chance between `0` and `100` that a value will be scrambled to `null`. Keep this low unless you want a lot of empty objects (default: **5**)
+  - `preservedKeys: string[]` - An array of keys (as strings) that should not be scrambled (default: **[]**)
+  - `preserveAllKeys: boolean` - Indicates if all object keys should be preserved (default: **false**)
+  - `scrambleStructureOnly: boolean` - Indicates if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays (default: **false**)
+  - `wildKeys: boolean` - Control how readable scrambled object keys should be (default: **false**)
+  - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. Still returns the full document (default: **none**)
 
 ## Tests
 
-Run `npm run test` to run the tests.
+```
+npm install
+npm test
+```
 
 ## LICENSE
 
