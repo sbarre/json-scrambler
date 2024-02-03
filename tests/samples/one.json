@@ -1,0 +1,17 @@
+{
+  "name": "Seb Barre",
+  "age": 48,
+  "stuff": [
+    "Seb",
+    "Barre",
+    48,
+    2344,
+    [
+      {
+        "someValue": "Twelve"
+      },
+      1209120,
+      "Help"
+    ]
+  ]
+}
