@@ -1,6 +1,6 @@
 # JSON Scrambler
 
-**Randomly mutate a JSON object to change add, remove or change properties, for testing purposes. Always returns back valid JSON.**
+**Randomly mutate a JSON object to add, remove or change properties for testing purposes. Always returns back valid JSON.**
 
 ## What is this about?
 
