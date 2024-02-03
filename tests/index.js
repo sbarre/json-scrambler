@@ -15,7 +15,7 @@ console.log(inspect(scramble(one, {
   chaos: 100,
   scrambleStructureOnly: true
   //  startingPoint: '$.stuff[4][0]'
-}), false, 6, true));
+}), false, 30, true));
 
 // t.test('mutate', async (t) => {
 

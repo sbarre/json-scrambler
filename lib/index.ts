@@ -17,6 +17,7 @@ type ScramblerOptions = {
   wildKeys?: boolean;
   startingPoint?: string;
   scrambleStructureOnly?: boolean;
+  maxDepth?: number;
 }
 
 class Scrambler {
@@ -25,31 +26,33 @@ class Scrambler {
   startingOdds: number = 100;
 
   arrayOperatorOdds = {
-    addElement: 5,
+    addElement: 25,
     removeElement: 5,
-    swapElements: 100
+    swapElements: 50
   };
 
   arrayOperatorMaximums = {
-    addElement: 2,
-    removeElement: 0,
-    swapElements: 3
+    addElement: 3,
+    removeElement: 2,
+    swapElements: 2
   }
 
   objectOperatorOdds = {
-    addElement: 100,
+    addElement: 25,
     removeElement: 5,
   };
 
   objectOperatorMaximums = {
-    addElement: 2,
-    removeElement: 0,
+    addElement: 3,
+    removeElement: 2,
   }
 
 
   maxStringLengths: number[] = [10,50,100,1000];
   minNumber: number = 0;
   maxNumbers: number[] = [10,100,100000,100000000000]
+
+  maxDepth: number;
 
   chaos: number;
   canBeNull: boolean;
@@ -81,6 +84,8 @@ class Scrambler {
     this.chaos = (options.chaos !== undefined) ? options.chaos :  10;
     this.canBeNull = options.canBeNull || true;
     this.wildKeys = options.wildKeys || false;
+
+    this.maxDepth = options.maxDepth || 30;
 
     this.preservedKeys = options.preservedKeys || [];
     this.preserveAllKeys = options.preserveAllKeys || false;
@@ -134,9 +139,9 @@ class Scrambler {
     return random < this.nullOdds;
   }
 
-  doMutation() : boolean {
+  doMutation(forceMutation: boolean = false) : boolean {
     const random = Math.floor(Math.random() * this.odds);
-    if (random < this.chaos) {
+    if (random < this.chaos || forceMutation) {
       this.odds = this.startingOdds;
       return true;
     } else {
@@ -145,30 +150,32 @@ class Scrambler {
     }
   }
 
-  arrayMutate(arr: any[], canBeNull: boolean): Array<any> | null {
+  arrayMutate(arr: any[], canBeNull: boolean, depth: number = 1, forceMutation: boolean = false): Array<any> | null {
     let newArr: any[] = JSON.parse(JSON.stringify(arr));
 
-    let addElement = Math.floor(Math.random() * 100) < this.arrayOperatorOdds.addElement;
+    if (depth >= this.maxDepth) return newArr;
+
+    let addElement = (Math.floor(Math.random() * 100) < this.arrayOperatorOdds.addElement) || forceMutation;
     let removeElement = Math.floor(Math.random() * 100) < this.arrayOperatorOdds.removeElement;
     let swapElements = Math.floor(Math.random() * 100) < this.arrayOperatorOdds.swapElements;
 
     for (let i = 0; i < newArr.length; i++) {
 
       if (Array.isArray(newArr[i])) {
-        newArr[i] = JSON.parse(JSON.stringify(this.arrayMutate(newArr[i], this.canBeNull)));
+        newArr[i] = JSON.parse(JSON.stringify(this.arrayMutate(newArr[i], this.canBeNull, depth+1)));
       } else if (typeof newArr[i] === 'object') {
-        newArr[i] = JSON.parse(JSON.stringify(this.objectMutate(newArr[i], this.canBeNull)));
+        newArr[i] = JSON.parse(JSON.stringify(this.objectMutate(newArr[i], this.canBeNull, depth+1)));
       } else if (typeof newArr[i] === 'number') {
-        newArr[i] = this.numberMutate(newArr[i], this.canBeNull);
+        newArr[i] = this.numberMutate(newArr[i], this.canBeNull, depth+1);
       } else if (typeof newArr[i] === 'string') {
-        newArr[i] = this.stringMutate(newArr[i], this.canBeNull);
+        newArr[i] = this.stringMutate(newArr[i], this.canBeNull, depth+1);
       } else {
         newArr[i] = newArr[i];
       }
   
     }
 
-    if (this.doMutation()) {
+    if (this.doMutation(forceMutation)) {
 
       if (removeElement && newArr.length > 0) {
         const numElements = Math.floor(Math.random() * this.arrayOperatorMaximums.removeElement) + 1;
@@ -180,12 +187,9 @@ class Scrambler {
       if (addElement) {
         const numElements = Math.floor(Math.random() * this.arrayOperatorMaximums.addElement) + 1;
         for (let i=0; i < numElements; i++) {
-          const newEl = this._getRandomElement(true);
+          const newEl = this._getRandomElement(true, depth);
           const newIndex = Math.floor(Math.random() * newArr.length);
           newArr.splice(newIndex, 0, newEl);
-          if (Array.isArray(newEl)) {
-            newArr[newIndex] = this.arrayMutate(newArr[newIndex], this.canBeNull);
-          }
         }
       }
 
@@ -208,8 +212,10 @@ class Scrambler {
     return (canBeNull && this.checkNullOdds()) ? null : newArr;
   }
   
-  objectMutate(obj: any, canBeNull: boolean): any | null {
+  objectMutate(obj: any, canBeNull: boolean, depth: number = 1, forceMutation: boolean = false): any | null {
     let newObj = JSON.parse(JSON.stringify(obj));
+
+    if (depth >= this.maxDepth) return newObj;
 
     let addElement = Math.floor(Math.random() * 100) < this.objectOperatorOdds.addElement;
     let removeElement = Math.floor(Math.random() * 100) < this.objectOperatorOdds.removeElement;
@@ -218,18 +224,18 @@ class Scrambler {
 
     newObjKeys.forEach((key) => {
 
-      let k = (this.preservedKeys.includes(key) || this.preserveAllKeys) ? key : (this.doMutation() ? this._generateString(this.wildKeys) : key );
+      let k = (this.preservedKeys.includes(key) || this.preserveAllKeys) ? key : (this.doMutation(forceMutation) ? this._generateString(this.wildKeys) : key );
       if (Array.isArray(newObj[key])) {
-        newObj[k] = JSON.parse(JSON.stringify(this.arrayMutate(newObj[key], this.canBeNull)));
+        newObj[k] = JSON.parse(JSON.stringify(this.arrayMutate(newObj[key], this.canBeNull, depth+1, forceMutation)));
         if (k !== key) delete newObj[key];
       } else if (typeof newObj[key] === 'object') {
-        newObj[k] = JSON.parse(JSON.stringify(this.objectMutate(newObj[key], this.canBeNull)));
+        newObj[k] = JSON.parse(JSON.stringify(this.objectMutate(newObj[key], this.canBeNull, depth+1, forceMutation)));
         if (k !== key) delete newObj[key];
       } else if (typeof newObj[key] === 'number') {
-        newObj[k] = this.numberMutate(newObj[key], this.canBeNull);
+        newObj[k] = this.numberMutate(newObj[key], this.canBeNull, depth+1, forceMutation);
         if (k !== key) delete newObj[key];
       } else if (typeof newObj[key] === 'string') {
-        newObj[k] = this.stringMutate(newObj[key], this.canBeNull);
+        newObj[k] = this.stringMutate(newObj[key], this.canBeNull, depth+1, forceMutation);
         if (k !== key) delete newObj[key];
       }
   
@@ -237,7 +243,7 @@ class Scrambler {
 
     const currentObjKeys = Object.keys(newObj) as Array<keyof typeof newObj>;
 
-    if (this.doMutation()) {
+    if (this.doMutation(forceMutation)) {
 
       if (removeElement && currentObjKeys.length > 0) {
         const numElements = Math.floor(Math.random() * this.objectOperatorMaximums.removeElement) + 1;
@@ -251,7 +257,7 @@ class Scrambler {
         const numElements = Math.floor(Math.random() * this.objectOperatorMaximums.addElement) + 1;
         for (let i=0; i < numElements; i++) {
           const newKey = this._generateString(this.wildKeys);
-          const newVal = this._getRandomElement(true);
+          let newVal = this._getRandomElement(true, depth);
           newObj[newKey] = newVal;
         }
       }
@@ -261,23 +267,23 @@ class Scrambler {
     return (canBeNull && this.checkNullOdds()) ? null : newObj;
   }
   
-  numberMutate(num: number, canBeNull: boolean): number | null {
-    if (this.doMutation() && !this.scrambleStructureOnly) {
+  numberMutate(num: number, canBeNull: boolean, depth: number = 1, forceMutation: boolean = false): number | null {
+    if (this.doMutation(forceMutation) && !this.scrambleStructureOnly) {
       return (canBeNull && this.checkNullOdds()) ? null : this._generateNumber();
     }
     return num;
   }
   
-  stringMutate(str: string, canBeNull: boolean): string  | null {
+  stringMutate(str: string, canBeNull: boolean, depth: number = 1, forceMutation: boolean = false): string  | null {
     let newStr: string | null = str;
-    if (this.doMutation() && !this.scrambleStructureOnly) {
+    if (this.doMutation(forceMutation) && !this.scrambleStructureOnly) {
       newStr = (canBeNull && this.checkNullOdds()) ? null : this._generateString();
     }
     return newStr;
   }
 
-  _getRandomElement(includeArrays: boolean = false): any {
-    const max = (includeArrays) ? 3 : 2;
+  _getRandomElement(includeArrays: boolean = false, depth: number = 1): any {
+    const max = (includeArrays && (depth < this.maxDepth)) ? 3 : 2;
     const flip = Math.floor(Math.random() * max);
 
     switch (flip) {
@@ -286,12 +292,13 @@ class Scrambler {
       case 1:
         return this._generateNumber();
       case 2:
-        return this._generateArray();
+        return this._generateArray(depth);
     }
   }
 
-  _generateArray(): Array<any> {
-    return [];
+  _generateArray(depth: number): any[] | null {
+    let arr: any[] = [];
+    return this.arrayMutate(arr, false, depth*3, true); // we generate a max of 2 levels deep
   }
 
   _generateNumber(): number {

@@ -14,7 +14,7 @@ You can control how subtle, or not subtle, the changes are. From simple modifica
 
 JSON Scrambler can be used for testing the robustness of any program that accepts JSON input (such as an API or microservice) by providing infinite variations on existing JSON documents in ways that are unpredictable and random.
 
-Make sure your application doesn't assume that _valid_ JSON is _correct_ JSON!
+**Make sure your application doesn't assume that _valid_ JSON is _correct_ JSON!**
 
 ### Credit where it's due
 
@@ -105,11 +105,12 @@ Every property of `options` is optional and has a default value.
   - `chaos: number` - The amount of scrambling to do. Valid values between `0` and `100` (default: **10**)
   - `canBeNull: boolean` - Indicates if values can be made null during scrambling (default: **true**)
   - `nullOdds: number` - Percentage chance between `0` and `100` that a value will be scrambled to `null`. Keep this low unless you want a lot of empty objects (default: **5**)
-  - `preservedKeys: string[]` - An array of keys (as strings) that should not be scrambled (default: **[]**)
+  - `preservedKeys: string[]` - An array of keys that should not be scrambled (default: **[]**)
   - `preserveAllKeys: boolean` - Indicates if all object keys should be preserved (default: **false**)
-  - `scrambleStructureOnly: boolean` - Indicates if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays (default: **false**)
-  - `wildKeys: boolean` - Control how readable scrambled object keys should be (default: **false**)
-  - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. Still returns the full document (default: **none**)
+  - `scrambleStructureOnly: boolean` - Indicates if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays. This necessarily sets `preserveAllKeys` to `true`. (default: **false**)
+  - `wildKeys: boolean` - Controls how readable scrambled object keys will be (default: **false**)
+  - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. If the expression matches more than one element, it only selects the first one. Still returns the full document after scrambling (default: **none**)
+  - `maxDepth: number` - The maximum depth to recurse through the JSON structure. Adjust as needed (default: **30**)
 
 ## Tests
 
