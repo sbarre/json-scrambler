@@ -60,5 +60,16 @@
   "dependencies": {
     "jsonpath": "^1.1.1",
     "randomstring": "^1.3.0"
-  }
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ]
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
 }

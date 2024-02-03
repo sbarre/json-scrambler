@@ -1,6 +1,6 @@
 # JSON Scrambler
 
-**Randomly mutate a JSON object to add, remove or change properties for testing purposes. Always returns back valid JSON.**
+**TL;DR - Randomly mutates a JSON object to add, remove or change properties for testing purposes. Always returns back valid JSON.**
 
 ## What is this about?
 
@@ -18,7 +18,7 @@ JSON Scrambler can be used for testing the robustness of any program that accept
 
 ### Credit where it's due
 
-This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON.
+This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON on output.
 
 ## Installation
 
@@ -29,7 +29,7 @@ $ npm install json-scrambler
 ```
 
 > [!NOTE]
-> NPM doesn't work yet. If you want to use this today, clone the repo, run `npm install` and then `npm run build` and look in the `dist` folder.
+> NPM doesn't work yet. There is a problem with my account. If you want to use this today, clone the repo, run `npm install` and then `npm run build` and look in the `dist` folder for now.
 
 ## Usage
 
