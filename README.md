@@ -102,3 +102,11 @@ Every property of `options` is optional and has a default value.
   - `scrambleStructureOnly` - A boolean value to indicate if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays (default: **false**)
   - `wildKeys` - A boolean value to control how readable scrambled object keys should be (default: **false**)
   - `startingPoint` - A [JSONPath]() expression to tell the scrambler where to start scrambling in the document. Useful if you only care about a certain portion of a large document. Still returns the full document (default: **none**)
+
+## Tests
+
+Run `npm run test` to run the tests.
+
+## LICENSE
+
+json-scrambler is licensed under the MIT license.
