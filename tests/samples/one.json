@@ -1,9 +1,9 @@
 {
-  "name": "Seb Barre",
-  "age": 48,
+  "name": "First Last",
+  "uid": 148,
   "stuff": [
-    "Seb",
-    "Barre",
+    "Item",
+    "Other Item",
     48,
     2344,
     [

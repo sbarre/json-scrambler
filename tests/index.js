@@ -6,14 +6,20 @@ import { inspect } from 'util';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-import mutate from '../dist/index.js';
+import scramble from '../dist/index.js';
 
 const one = require('./samples/one.json');
 const two = require('./samples/two.json');
 
-t.test('mutate', async (t) => {
+console.log(inspect(scramble(one, {
+  chaos: 100,
+  scrambleStructureOnly: true
+  //  startingPoint: '$.stuff[4][0]'
+}), false, 6, true));
 
-  t.ok();
+// t.test('mutate', async (t) => {
 
-  t.end();
-});
+//   t.ok();
+
+//   t.end();
+// });
