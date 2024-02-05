@@ -16,7 +16,8 @@
   "scripts": {
     "build": "rm -rf dist/* && tsup",
     "dev": "tsup --watch",
-    "test": "tap run"
+    "test": "tap run",
+    "release:dryrun": "npx semantic-release --dry-run --branch $(git describe --contains --all HEAD)"
   },
   "repository": {
     "type": "git",

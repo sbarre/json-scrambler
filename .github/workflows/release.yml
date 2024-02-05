@@ -16,20 +16,24 @@ jobs:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
+      packages: write # to be able to publish a package
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: "18"
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm install
+
+      - name: Build it
+        run: npm run build
 
       - name: Semantic Release
         env:
