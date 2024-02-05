@@ -309,10 +309,10 @@ class Scrambler {
 
     const wildChars = (wild) ? ['alphanumeric', '    !@#$%^&*()_+{}|:<>?/.,;[]-=\\~`'] : ['alphanumeric'];
     const arrLength = (wild) ? this.maxStringLengths.length : this.maxStringLengths.length - 2;
-
+ 
     return randomstring.generate({
-      length: Math.floor(Math.random() * this.maxStringLengths[Math.floor(Math.random() * arrLength)]), 
-      charset: wildChars});
+      // @ts-ignore
+      length: Math.floor(Math.random() * this.maxStringLengths[Math.floor(Math.random() * arrLength)]), charset: wildChars});
   }
 
 }
