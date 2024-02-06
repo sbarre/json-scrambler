@@ -28,9 +28,6 @@ To install json-scrambler, use npm:
 $ npm install json-scrambler
 ```
 
-> [!NOTE]
-> NPM might work now? If you want to use this today, clone the repo, run `npm install` and then `npm run build` and look in the `dist` folder for now.
-
 ## Usage
 
 ```javascript
