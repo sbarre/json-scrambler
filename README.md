@@ -16,6 +16,8 @@ JSON Scrambler can be used for testing the robustness of any program that accept
 
 **Make sure your application doesn't assume that _valid_ JSON is _correct_ JSON!**
 
+See also [JSON Scrambler Proxy](https://github.com/sbarre/json-scrambler-proxy) for a simple container-based approach to proxy a JSON API and apply json-scrambler in transit.
+
 ### Credit where it's due
 
 This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON on output.
