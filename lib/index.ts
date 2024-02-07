@@ -17,7 +17,10 @@ type ScramblerOptions = {
   wildKeys?: boolean;
   startingPoint?: string;
   scrambleStructureOnly?: boolean;
+  scrambleValuesOnly?: boolean;
   maxDepth?: number;
+  shuffleKeys?: boolean;
+  shuffleStrings?: boolean;
 }
 
 class Scrambler {
@@ -73,7 +76,11 @@ class Scrambler {
   preservedKeys: any[];
   preserveAllKeys: boolean;
 
+  shuffleKeys: boolean;
+  shuffleStrings: boolean;
+
   scrambleStructureOnly: boolean;
+  scrambleValuesOnly: boolean;
 
   startingPoint: string;
 
@@ -82,7 +89,7 @@ class Scrambler {
     this.nullOdds = (options.nullOdds !== undefined) ? options.nullOdds : 5;
     this.odds = this.startingOdds;
     this.chaos = (options.chaos !== undefined) ? options.chaos :  10;
-    this.canBeNull = options.canBeNull || true;
+    this.canBeNull = (options.canBeNull !== undefined) ? options.canBeNull : true;
     this.wildKeys = options.wildKeys || false;
 
     this.maxDepth = options.maxDepth || 30;
@@ -91,6 +98,12 @@ class Scrambler {
     this.preserveAllKeys = options.preserveAllKeys || false;
     this.scrambleStructureOnly = options.scrambleStructureOnly || false;
     if (this.scrambleStructureOnly) this.preserveAllKeys = true;
+
+    this.scrambleValuesOnly = options.scrambleValuesOnly || false;
+    if (this.scrambleValuesOnly) this.preserveAllKeys = true;
+
+    this.shuffleKeys = options.shuffleKeys || false;
+    this.shuffleStrings = options.shuffleStrings || false;
 
     this.startingPoint = options.startingPoint || '';
 
@@ -101,8 +114,6 @@ class Scrambler {
     } else {
       this.toScramble = this.parsed;
     }
-
-    //console.log(this.parsed,this.toScramble);
 
     this.asString = (typeof json === 'string') ? true : false;
 
@@ -122,7 +133,7 @@ class Scrambler {
       doc = this.stringMutate(doc, false);
     }
   
-    if (this.startingPoint !== '') {
+    if (this.startingPoint != '') {
       const parsed = JSON.parse(JSON.stringify(this.parsed));
       const result  = jp.apply(parsed, this.startingPoint, () => doc);
       this.scrambled = parsed;
@@ -175,7 +186,7 @@ class Scrambler {
   
     }
 
-    if (this.doMutation(forceMutation)) {
+    if (this.doMutation(forceMutation) && !this.scrambleValuesOnly) {
 
       if (removeElement && newArr.length > 0) {
         const numElements = Math.floor(Math.random() * this.arrayOperatorMaximums.removeElement) + 1;
@@ -243,7 +254,7 @@ class Scrambler {
 
     const currentObjKeys = Object.keys(newObj) as Array<keyof typeof newObj>;
 
-    if (this.doMutation(forceMutation)) {
+    if (this.doMutation(forceMutation) && !this.scrambleValuesOnly) {
 
       if (removeElement && currentObjKeys.length > 0) {
         const numElements = Math.floor(Math.random() * this.objectOperatorMaximums.removeElement) + 1;
@@ -277,7 +288,11 @@ class Scrambler {
   stringMutate(str: string, canBeNull: boolean, depth: number = 1, forceMutation: boolean = false): string  | null {
     let newStr: string | null = str;
     if (this.doMutation(forceMutation) && !this.scrambleStructureOnly) {
-      newStr = (canBeNull && this.checkNullOdds()) ? null : this._generateString();
+      if (this.shuffleStrings) {
+        newStr = (canBeNull && this.checkNullOdds()) ? null : this._shuffleString(str);
+      } else {
+        newStr = (canBeNull && this.checkNullOdds()) ? null : this._generateString();
+      }
     }
     return newStr;
   }
@@ -313,6 +328,10 @@ class Scrambler {
     return randomstring.generate({
       // @ts-ignore
       length: Math.floor(Math.random() * this.maxStringLengths[Math.floor(Math.random() * arrLength)]), charset: wildChars});
+  }
+
+  _shuffleString(str: string): string {
+    return str.split('').sort(() => Math.random() - 0.5).join('');
   }
 
 }

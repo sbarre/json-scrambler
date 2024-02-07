@@ -107,7 +107,10 @@ Every property of `options` is optional and has a default value.
   - `preservedKeys: string[]` - An array of keys that should not be scrambled (default: **[]**)
   - `preserveAllKeys: boolean` - Indicates if all object keys should be preserved (default: **false**)
   - `scrambleStructureOnly: boolean` - Indicates if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays. This necessarily sets `preserveAllKeys` to `true`. (default: **false**)
+  - `scrambleValuesOnly: boolean` - Indicates if only values (strings and numbers) should be scrambled. This will preserve the shape of objects and array, and sets `preserveAllKeys` to `true`. (default: **false**)
   - `wildKeys: boolean` - Controls how readable scrambled object keys will be (default: **false**)
+  - `shuffleKeys: boolean` - When set to `true` will shuffle key names using existing letters instead of generating new random strings (default: **false**)
+  - `shuffleStrings: boolean` - When set to `true` will shuffle string values using existing letters instead of generating new random strings (default: **false**)
   - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. If the expression matches more than one element, it only selects the first one. Still returns the full document after scrambling (default: **none**)
   - `maxDepth: number` - The maximum depth to recurse through the JSON structure. Adjust as needed (default: **30**)
 

@@ -13,7 +13,9 @@ const two = require('./samples/two.json');
 
 console.log(inspect(scramble(one, {
   chaos: 100,
-  scrambleStructureOnly: true
+  canBeNull: false,
+  scrambleValuesOnly: true,
+  shuffleStrings: true,
   //  startingPoint: '$.stuff[4][0]'
 }), false, 30, true));
 
