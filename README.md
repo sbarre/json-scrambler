@@ -56,6 +56,12 @@ const json = '{
 const scrambled = scramble(json, { chaos: 50 });
 ```
 
+Note that you can also use CommonJS:
+
+```javascript
+const scramble = require('json-scramble);
+```
+
 The `chaos` option controls how much the JSON is scrambled. A value of `0` makes no changes to the JSON and simply passes it through unchanged, while a value of `100` or higher will completely scramble the document. The default `chaos` is `10`.
 
 The contents of `scrambled` from the code above could then look like this:
