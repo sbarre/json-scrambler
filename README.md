@@ -147,7 +147,7 @@ const scrambled = scramble(json, {
 })
 ```
 
-More examples coming soon! [Open an issue](/issues/new) if you have a use-case you can't configure for, I'd love to hear it!
+More examples coming soon! [Open an issue](https://github.com/sbarre/json-scrambler/issues/new) if you have a use-case you can't configure for, I'd love to hear it!
 
 ## Tests
 
