@@ -92,6 +92,10 @@ It could also look like this:
 
 The scrambling can randomize strings, numbers and object keys. It can also add, remove or shuffle elements in an array, and insert or remove keys from objects.
 
+`json-scrambler` produces random output on each run. So as you build in guards and validations to handle the errors you see, you will not be able to repeat the same test with the same scrambled data again. This is by design, and the recommendation is to run scrambler tests in batches of 100 at a time or more, to make sure your code is resilient enough to handle all kinds of unexpected values.
+
+Approach this kind of testing in the same way you approach load testing, or actual [fuzzing](https://en.wikipedia.org/wiki/Fuzzing).
+
 ## API
 
 The `scramble(json[, options])` command accepts two parameters, the JSON to be scrambled and an optional `options` object.
@@ -113,6 +117,37 @@ Every property of `options` is optional and has a default value.
   - `shuffleStrings: boolean` - When set to `true` will shuffle string values using existing letters instead of generating new random strings (default: **false**)
   - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. If the expression matches more than one element, it only selects the first one. Still returns the full document after scrambling (default: **none**)
   - `maxDepth: number` - The maximum depth to recurse through the JSON structure. Adjust as needed (default: **30**)
+
+## Usage examples
+
+### Mangle the values only
+
+This configuration will maintain the "shape" of the JSON, in that it will not add, remove or shuffle array elements, add or remove object properties, or change object keys. It will also not replace any elements with `null`. Only strings and numbers will be changed, and `shuffleStrings: true` means that the strings will simply be scrambled in place and not replaced with random strings.
+
+This is a good configuration for verifying how your application deals with potentially out-of-bounds values (random numbers) and unexpected, but not wildly large, string values.
+
+The `chaos: 100` value means that every single string and number will be scrambled. Adjust that value down to introduce more subtle changes to the data.
+
+```javascript
+const scrambled = scramble(json, {
+  chaos: 100,
+  canBeNull: false,
+  scrambleValuesOnly: true,
+  shuffleStrings: true,
+})
+```
+
+### Unrecognizable!
+
+Keeping all the options as default and setting `chaos` to `100` will give you maximum scramble! Use this to test bounds checking (both on values and keys) and your application's ability to handle missing or extra properties on objects and in arrays. If your app handles this on the first try, close your laptop and call it a day!
+
+```javascript
+const scrambled = scramble(json, {
+  chaos: 100,
+})
+```
+
+More examples coming soon! [Open an issue](/issues/new) if you have a use-case you can't configure for, I'd love to hear it!
 
 ## Tests
 
