@@ -1,4 +1,7 @@
-# JSON Scrambler
+# JSON Scrambler [![NPM version][npm-image]][npm-url]
+
+[npm-image]: https://img.shields.io/npm/v/json-scrambler.svg
+[npm-url]: https://npmjs.org/package/json-scrambler
 
 **TL;DR - Randomly mutates a JSON object to add, remove or change properties for testing purposes. Always returns back valid JSON.**
 
