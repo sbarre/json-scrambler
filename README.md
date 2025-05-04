@@ -23,7 +23,9 @@ See also [JSON Scrambler Proxy](https://github.com/sbarre/json-scrambler-proxy) 
 
 ### Credit where it's due
 
-This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON on output.
+This library was inspired by the well-known concept of [fuzzing](https://en.wikipedia.org/wiki/Fuzzing) but with the added constraint that the scrambled input data needed to remain valid JSON on output.  From the Wikipedia page on fuzzing:
+
+> An effective fuzzer generates semi-valid inputs that are "valid enough" in that they are not directly rejected by the parser, but do create unexpected behaviors deeper in the program and are "invalid enough" to expose corner cases that have not been properly dealt with.
 
 ## Installation
 
@@ -57,12 +59,6 @@ const json = '{
 }';
 
 const scrambled = scramble(json, { chaos: 50 });
-```
-
-Note that you can also use CommonJS:
-
-```javascript
-const scramble = require("json-scramble")
 ```
 
 The `chaos` option controls how much the JSON is scrambled. A value of `0` makes no changes to the JSON and simply passes it through unchanged, while a value of `100` or higher will completely scramble the document. The default `chaos` is `10`.
@@ -119,10 +115,11 @@ Every property of `options` is optional and has a default value.
   - `nullOdds: number` - Percentage chance between `0` and `100` that a value will be scrambled to `null`. Keep this low unless you want a lot of empty objects (default: **5**)
   - `preservedKeys: string[]` - An array of keys that should not be scrambled (default: **[]**)
   - `preserveAllKeys: boolean` - Indicates if all object keys should be preserved (default: **false**)
+  - `preserveShape: boolean` - Indicates if object shapes should be preserved, so no adding or removing of properties (default: **false**)
   - `scrambleStructureOnly: boolean` - Indicates if keys, strings and numbers should be preserved. Will only mutate the shape of objects and arrays. This necessarily sets `preserveAllKeys` to `true`. (default: **false**)
   - `scrambleValuesOnly: boolean` - Indicates if only values (strings and numbers) should be scrambled. This will preserve the shape of objects and array, and sets `preserveAllKeys` to `true`. (default: **false**)
   - `wildKeys: boolean` - Controls how readable scrambled object keys will be (default: **false**)
-  - `shuffleKeys: boolean` - When set to `true` will shuffle key names using existing letters instead of generating new random strings (default: **false**)
+  - `shuffleKeys: boolean` - When set to `true` will shuffle key names using existing letters instead of generating new random strings.  Setting this to true also presents properties from being added or removed from an object. (default: **false**)
   - `shuffleStrings: boolean` - When set to `true` will shuffle string values using existing letters instead of generating new random strings (default: **false**)
   - `startingPoint: string` - A [JSONPath]() expression to indicate where to start scrambling in the document. Useful if you only care about a certain portion of a large document. If the expression matches more than one element, it only selects the first one. Still returns the full document after scrambling (default: **none**)
   - `maxDepth: number` - The maximum depth to recurse through the JSON structure. Adjust as needed (default: **30**)

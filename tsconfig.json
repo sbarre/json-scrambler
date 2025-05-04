@@ -21,6 +21,7 @@
       "types": ["node"],
       "outDir": "./dist",
       "target": "esnext",
+      "sourceMap": true
   },
   "compileOnSave": false,
   "exclude": ["node_modules", "dist"],

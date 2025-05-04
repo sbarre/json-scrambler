@@ -134,3 +134,7 @@ dist
 package-lock.json
 
 bundle
+
+test.js
+
+tests/*.tap
